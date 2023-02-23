@@ -118,7 +118,7 @@ def parse_args():
     parser.add_argument('-l', '--library',   help='path to sqlean fuzzy extension library', default='./fuzzy')
     parser.add_argument('-m', '--meta',      help='match meta data', action='store_true')
     parser.add_argument('-n', '--names',     help='match name data', action='store_true')
-    parser.add_argumnet('-t', '--threshold', help='Jarow-Winkler threshold value (default: 0.8)', default=0.8, type=float)
+    parser.add_argumnet('-t', '--threshold', help='Jaro-Winkler threshold value (default: 0.8)', default=0.8, type=float)
     parser.add_argument('-v', '--verbose',   help='increase output verbosity', action='store_true')
 
     args = parser.parse_args()

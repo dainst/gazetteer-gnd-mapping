@@ -61,7 +61,7 @@ The following command-line arguments are supported:
 | `-l`  | `--library`   | Path to sqlean fuzzy extension library (by default: `./fuzzy`).         |
 | `-m`  | `--meta`      | Run meta data matching.                                                 |
 | `-n`  | `--names`     | Run name data matching.                                                 |
-| `-t`  | `--threshold` | Threshold for Jarow-Winkler matching method (by default: 0.8).          |
+| `-t`  | `--threshold` | Threshold for Jaro-Winkler matching method (by default: 0.8).          |
 | `-v`  | `--verbose`   | Increase output verbosity.                                              |
 
 ### export.py
@@ -73,7 +73,7 @@ The following command-line arguments are supported:
 | `-m`  | `--meta`      | Export meta matches.                                                    |
 | `-n`  | `--names`     | Export name matches.                                                    |
 | `-o`  | `--output`    | Path of CSV output file.                                                |
-| `-t`  | `--threshold` | Jarow-Winkler min. value of matches to export (by default: 0.8).        |
+| `-t`  | `--threshold` | Jaro-Winkler min. value of matches to export (by default: 0.8).        |
 
 ## Data Import
 
@@ -97,7 +97,7 @@ two minutes.
 
 ## Fuzzy Matching
 
-Run the fuzzy matching of meta data and names based on Jarow-Winkler distance,
+Run the fuzzy matching of meta data and names based on Jaro-Winkler distance,
 with optional threshold value of the result that has to be reached to be stored
 in `database.sqlite`:
 
@@ -147,7 +147,7 @@ The Python script `export.py` dumps matching data to CSV file. Use command-line
 argument `--meta` for meta matches (i.e., only matching preferred titles), or
 `--names` for matches of all name variants. Default CSV delimiter is `|`.
 
-To write 1000 meta data matches of Jarow-Winkler distance >= 0.8 to CSV file
+To write 1000 meta data matches of Jaro-Winkler distance >= 0.8 to CSV file
 `meta.csv`, run:
 
 ```

@@ -108,7 +108,7 @@ def parse_args():
     parser.add_argument('-i', '--input',     help='path to SQLite database', required=True, type=Path)
     parser.add_argument('-l', '--limit',     help='number of rows to export (optional)', type=int)
     parser.add_argument('-o', '--output',    help='path of CSV file', required=True)
-    parser.add_argument('-t', '--threshold', help='Jarow-Winkler threshold value (default: 0.8)', default=0.8, type=float)
+    parser.add_argument('-t', '--threshold', help='Jaro-Winkler threshold value (default: 0.8)', default=0.8, type=float)
     parser.add_argument('-v', '--verbose',   help='increase output verbosity', action='store_true')
 
     group = parser.add_mutually_exclusive_group()
