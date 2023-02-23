@@ -1,13 +1,13 @@
-# Gazetteer & GND Mapping
+# Gazetteer & DNB Mapping
 
-A collection of Python scripts to import Gazetteer and GND database dumps into
+A collection of Python scripts to import Gazetteer and DNB database dumps into
 a common SQLite database, and run fuzzy matching methods on the data sets to
 find relations based on lexical similarity. The following programs are provided:
 
-* **import.py** – reads JSON and JSON-LD dumps of Gazetteer and GND databases
+* **import.py** – reads JSON and JSON-LD dumps of Gazetteer and DNB databases
   into a SQLite database.
 * **fuzzy.py** – uses fuzzy matching to find relations between Gazetteer and
-  GND data sets. Requires the *sqlean* extension for SQLite.
+  DNB data sets. Requires the *sqlean* extension for SQLite.
 * **export.py** – writes matches from database to CSV file.
 * **html5.py** – exports data in HTML5 format (experimental).
 
