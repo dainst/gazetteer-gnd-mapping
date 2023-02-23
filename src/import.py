@@ -283,7 +283,7 @@ def json_import_gaz(json_path, db_path):
             gaz_id = obj.get('gazId')
 
             if not gaz_id:
-                logger.warning('object has to gazId')
+                logger.warning('object has no gazId')
                 continue
 
             raw = json.dumps(obj, use_decimal=True)
