@@ -27,7 +27,7 @@ CREATE INDEX IF NOT EXISTS idx_gaz_name_gaz_id ON gaz_name (gaz_id);
 CREATE INDEX IF NOT EXISTS idx_gaz_name_title  ON gaz_name (gaz_id, title);
 CREATE INDEX IF NOT EXISTS idx_gaz_name_lang   ON gaz_name (gaz_id, lang);
 
--- Gazeteer indentifiers.
+-- Gazetteer indentifiers.
 
 -- GeoNames.
 CREATE TABLE IF NOT EXISTS gaz_ident_geonames (
@@ -186,4 +186,38 @@ CREATE TABLE IF NOT EXISTS dnb_old_auth (
     prefix      TEXT,
     gnd_id      TEXT,
     FOREIGN KEY (dnb_meta_id) REFERENCES dnb_meta(id)
+);
+
+--
+-- Fuzzy meta matches.
+--
+CREATE TABLE IF NOT EXISTS fuzzy_meta (
+    id          INTEGER PRIMARY KEY,
+    dnb_meta_id INTEGER NOT NULL,
+    gaz_meta_id INTEGER NOT NULL,
+    dleven      INTEGER, -- Damerau-Levenshtein distance
+    edit        INTEGER, -- Spellcheck edit distance
+    hamm        INTEGER, -- Hamming distance
+    jarow       REAL,    -- Jaro-Winkler distance
+    leven       INTEGER, -- Levenshtein distance
+    osa         INTEGER, -- Optimal String Alignment distance
+    FOREIGN KEY (dnb_meta_id) REFERENCES dnb_meta(id),
+    FOREIGN KEY (gaz_meta_id) REFERENCES gaz_meta(id)
+);
+
+--
+-- Fuzzy name matches.
+--
+CREATE TABLE IF NOT EXISTS fuzzy_name (
+    id          INTEGER PRIMARY KEY,
+    dnb_name_id INTEGER NOT NULL,
+    gaz_name_id INTEGER NOT NULL,
+    dleven      INTEGER, -- Damerau-Levenshtein distance
+    edit        INTEGER, -- Spellcheck edit distance
+    hamm        INTEGER, -- Hamming distance
+    jarow       REAL,    -- Jaro-Winkler distance
+    leven       INTEGER, -- Levenshtein distance
+    osa         INTEGER, -- Optimal String Alignment distance
+    FOREIGN KEY (dnb_name_id) REFERENCES dnb_name(id),
+    FOREIGN KEY (gaz_name_id) REFERENCES gaz_name(id)
 );

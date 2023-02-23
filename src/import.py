@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 """
-import.py - Gazetteer & DNB database importer
+import.py - Gazetteer & DNB dump to database importer
 
 Usage:
 
 ```
 $ python3 import.py --help
 $ python3 import.py --gaz gaz.json --output database.sqlite --schema schema.sql
-$ python3 import.py --dnb gaz.json --output database.sqlite --schema schema.sql
+$ python3 import.py --dnb dnb.json --output database.sqlite --schema schema.sql
+$ python3 import.py --dnb dnb.json --output database.sqlite --schema schema.sql --old
 ```
 """
 
@@ -20,7 +21,6 @@ import sys
 
 from argparse import ArgumentParser, FileType
 from pathlib import Path
-
 
 logger = logging.getLogger('main')
 
@@ -48,7 +48,13 @@ def db_import_dnb(con, dnb_id, pref_name, owl_geonames, owl_gnd, owl_loc,
     cur = con.cursor()
     cur.execute("""
         INSERT INTO dnb_meta (
-            dnb_id, pref_name, owl_geonames, owl_gnd, owl_loc, owl_viaf, owl_wikidata
+            dnb_id,
+            pref_name,
+            owl_geonames,
+            owl_gnd,
+            owl_loc,
+            owl_viaf,
+            owl_wikidata
         ) VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (dnb_id, pref_name, owl_geonames, owl_gnd, owl_loc, owl_viaf, owl_wikidata))
     con.commit()
@@ -64,7 +70,7 @@ def db_import_dnb(con, dnb_id, pref_name, owl_geonames, owl_gnd, owl_loc,
     if old_auths and len(old_auths) > 0:
         values = []
 
-        for (dnb_id, value) in old_auths:
+        for dnb_id, value in old_auths:
             prefix = None
             gnd_id = None
 
@@ -137,15 +143,17 @@ def json_read(json_path):
     return data
 
 
-def json_import_dnb(json_path, db_path):
+def json_import_dnb(json_path, db_path, old_auth=False):
     """
     Imports JSON-LD into SQLite database from given paths.
     """
+    # Keys.
     owl_key       = 'http://www.w3.org/2002/07/owl#sameAs'
     pref_name_key = 'https://d-nb.info/standards/elementset/gnd#preferredNameForThePlaceOrGeographicName'
     var_names_key = 'https://d-nb.info/standards/elementset/gnd#variantNameForThePlaceOrGeographicName'
     old_auths_key = 'https://d-nb.info/standards/elementset/gnd#oldAuthorityNumber'
 
+    # Identifiers.
     dnb_ident          = 'https://d-nb.info/gnd/'
     owl_geonames_ident = 'https://sws.geonames.org/'
     owl_gnd_ident      = 'https://d-nb.info/gnd/'
@@ -229,16 +237,17 @@ def json_import_dnb(json_path, db_path):
                     if not value: continue
                     var_names.append((dnb_id, value, ))
 
-            # Get old authority numbers.
-            var_list = obj.get(old_auths_key, [])
+            if old_auth:
+                # Get old authority numbers.
+                var_list = obj.get(old_auths_key, [])
 
-            if len(var_list) > 0:
-                old_auths = []
+                if len(var_list) > 0:
+                    old_auths = []
 
-                for var_obj in var_list:
-                    value = var_obj.get('@value')
-                    if not value: continue
-                    old_auths.append((dnb_id, value, ))
+                    for var_obj in var_list:
+                        value = var_obj.get('@value')
+                        if not value: continue
+                        old_auths.append((dnb_id, value, ))
 
             # Write to database.
             try:
@@ -296,10 +305,11 @@ def parse_args():
     """
     parser = ArgumentParser(description='Gazetteer and DNB database importer', exit_on_error=True)
 
-    parser.add_argument('-o', '--output',  help='path to SQLite database file', required=True)
-    parser.add_argument('-d', '--dnb',     help='path to DNB JSON-LD file',     type=Path)
-    parser.add_argument('-g', '--gaz',     help='path to Gazetteer JSON file',  type=Path)
-    parser.add_argument('-s', '--schema',  help='path to SQLite schema file',   default='schema.sql')
+    parser.add_argument('-o', '--output', help='path to SQLite database file', required=True)
+    parser.add_argument('-d', '--dnb',    help='path to DNB JSON-LD file', type=Path)
+    parser.add_argument('-g', '--gaz',    help='path to Gazetteer JSON file', type=Path)
+    parser.add_argument('-s', '--schema', help='path to SQLite schema file', default='schema.sql')
+    parser.add_argument('-O', '--old',    help='import additional old authority numbers (DNB only)', action='store_true')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-v', '--verbose', help='increase output verbosity', action='store_true')
@@ -338,7 +348,7 @@ if __name__ == '__main__':
     try:
         if args.dnb:
             # Import DNB data from JSON-LD file.
-            json_import_dnb(json_path=args.dnb, db_path=args.output)
+            json_import_dnb(json_path=args.dnb, db_path=args.output, old_auth=args.old)
 
         if args.gaz:
             # Import Gaz data from JSON file.
