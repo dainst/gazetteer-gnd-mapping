@@ -69,6 +69,7 @@ The following command-line arguments are supported:
 | Short | Long          | Description                                                             |
 |-------|---------------|-------------------------------------------------------------------------|
 | `-i`  | `--input`     | Path to SQLite database file.                                           |
+| `-l`  | `--limit`     | Maximum number of data sets to write (optional).                        |
 | `-m`  | `--meta`      | Export meta matches.                                                    |
 | `-n`  | `--names`     | Export name matches.                                                    |
 | `-o`  | `--output`    | Path of CSV output file.                                                |
