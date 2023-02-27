@@ -25,8 +25,8 @@ matches.
 Create a virtual environment and install the dependencies:
 
 ```
-$ python3 -m venv virtual-env
-$ source virtual-env/bin/activate
+$ python3 -m venv .venv/
+$ source .venv/bin/activate
 $ python3 -m pip install -r requirements.txt
 ```
 
