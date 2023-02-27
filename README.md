@@ -20,6 +20,8 @@ matches.
 
 ## Requirements
 
+### Linux
+
 Create a virtual environment and install the dependencies:
 
 ```
@@ -34,8 +36,37 @@ shared libraries and copy `fuzzy.so` to `src/` in this repository:
 ```
 $ git clone --depth 1 https://github.com/nalgeon/sqlean
 $ cd sqlean/
-$ make compile-linux
+$ EXPORT
+$ make prepare-dist
 ```
+For values see https://sqlite.org/download.html:
+
+```
+$ export SQLITE_RELEASE_YEAR=<release year of your sqlite>  
+$ export SQLITE_VERSION=<sqllite version with trailing zeros>
+$ make download-sqlite
+```
+
+
+Branch matching your SQLite version (for example 3.40).
+```
+$ export SQLITE_BRANCH=<your sqlite version>
+$ make download-external
+```
+Finally compile `sqlean` and copy the `fuzzy.so`.
+
+```
+$ make compile-linux
+$ cp dist/fuzzy.so ../src/
+```
+
+### Windows
+
+TODO
+
+### OS X
+
+TODO
 
 ## Command-Line Arguments
 
